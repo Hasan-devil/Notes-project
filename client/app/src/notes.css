@@ -1,4 +1,4 @@
-note{
+note {
   margin-top: 4rem !important;
   width: 100%;
   height: 100%;
@@ -11,9 +11,8 @@ note{
   margin-bottom: 1rem !important;
   background-color: transparent !important;
   border: 1px solid black !important;
-  border-radius: 2rem !important; 
-  padding: 0.2rem 1rem !important;
-  
+  border-radius: 2rem !important;
+  padding: 0.2rem 2rem !important;
 }
 .btn-ico {
   margin-left: 0.5rem !important;
@@ -26,15 +25,76 @@ notesholder {
   width: 100%;
   height: 100%;
   display: grid;
-  gap: .5rem;
+  gap: 0.5rem;
 }
-.note-card{
-    width: 15rem !important;
-    height:15rem !important;
-    align-items: center;
-    background-color: var(--card-bg-color);
-    box-shadow: var(--card-shadow);
-    margin-top: 1rem;
-    overflow: auto;
-    cursor: default;
+.note-card {
+  width: 15rem !important;
+  height: 15rem !important;
+  align-items: center;
+  background-color: var(--card-bg-color);
+  box-shadow: var(--card-shadow);
+  margin-top: 1rem;
+  overflow: auto;
+  cursor: default;
+}
+.border-black {
+  border-color: black;
+}
+.form-field {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+}
+
+.title-input {
+  height: 2rem !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 1.2rem !important;
+}
+.content-input {
+  border: none !important;
+  outline: none !important;
+  font-size: 1rem !important;
+}
+.title-input:focus,
+.content-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.modal{
+  --bs-modal-width: 600px !important;
+}
+.btn-primarym{
+  background-color: transparent !important;
+  border: 1px solid black !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 500px) {
+  .note-card {
+    width: 100% !important;
+    height: 6rem !important;
+    overflow: hidden;
+  }
+}
+@media (min-width: 500px) and (max-width: 772px) {
+  .note-card {
+    width: 100% !important;
+    height: 15rem !important;
+  }
 }

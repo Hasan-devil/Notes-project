@@ -1,46 +1,49 @@
 import { Card, Container, Row, Col, Modal } from "react-bootstrap";
 import "../notes.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Notes() {
-  const [show, setShow] = useState(false);
+  //states
+  const [showModal, setShow] = useState(false);
+  const isEdit = useRef(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  function NotesEditor() {
+  const handleShow = () => {
+    setShow(true);
+    isEdit.current = false;
+  };
+  const handleShowEdit = () => {
+    setShow(true);
+    isEdit.current = true;
+    console.log("Edit Notes clicked");
+  };
+  function NotesEditor(props) {
     return (
       <>
-        <Modal show={show} onHide={handleClose} centered backdrop="static">
+        <Modal show={showModal} onHide={handleClose} centered backdrop="static" className="notes-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Edit Note</Modal.Title>
+            <Modal.Title>{props.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <form>
-              <div className="mb-3">
-                <label htmlFor="noteTitle" className="form-label">
-                  Note Title
-                </label>
+            <form autoComplete="off">
+              <div className="mb-3 form-field">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control title-input"
                   id="noteTitle"
-                  placeholder="Enter note title"
+                  placeholder="Title"
+                  autoFocus
                 />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="noteContent" className="form-label">
-                  Note Content
-                </label>
                 <textarea
-                  className="form-control"
+                  className="form-control content-input"
                   id="noteContent"
                   rows="5"
-                  placeholder="Enter note content"
+                placeholder="Enter your note content here"
+                  required
                 ></textarea>
               </div>
-              <button className="btn btn-primary">
-                Save Note
-              </button>
+              <button className="btn btn-primarym m-1">Save Note</button>
+              <button className="btn btn-dark">{props.btn}</button>
             </form>
           </Modal.Body>
         </Modal>
@@ -49,32 +52,37 @@ export default function Notes() {
   }
   return (
     <note>
-      <NotesEditor />
+      {isEdit.current ? (
+        <NotesEditor title="Edit Note" btn="Delete Notes"/>
+      ) : (
+        <NotesEditor title="Add New Note" btn="Cancel"/>
+      )}
+
       <button className="btn-field" onClick={handleShow}>
         Enter Your Notes Here
-        <button className="btn-ico">
+        <span className="btn-ico">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
             fill="currentColor"
-            class="bi bi-plus-circle"
+            className="bi bi-plus-circle"
             viewBox="0 0 16 16"
           >
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
           </svg>
-        </button>
+        </span>
       </button>
       <notesholder>
         <Container>
           <Row>
-            {Array(10)
+            {Array(1)
               .fill()
               .map((_, i) => (
                 <Col key={i} xs={12} md={6} lg={4}>
                   <NoteCard
-                    onClick={handleShow}
+                    onClick={handleShowEdit}
                     title="Note Title"
                     text="This is a sample note content. You can edit or delete this note. Lorem
           ipsum dolor sit amet consectetur adipisicing elit. Sed natus,
@@ -91,10 +99,8 @@ export default function Notes() {
   );
 }
 function NoteCard(props) {
-  console.log("Notecard");
-
   return (
-    <Card className="note-card" onClick={props.onClick}>
+    <Card className="note-card" onClick={props.onClick} border="black">
       <Card.Body>
         <Card.Title>{props.title || "Title"}</Card.Title>
         <Card.Text>{props.text}</Card.Text>
