@@ -77,7 +77,7 @@ export default function Notes() {
       <notesholder>
         <Container>
           <Row>
-            {Array(1)
+            {Array(20)
               .fill()
               .map((_, i) => (
                 <Col key={i} xs={12} md={6} lg={4}>

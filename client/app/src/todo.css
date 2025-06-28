@@ -1,14 +1,27 @@
+/* whole todo page's container */
 .todo-container {
   margin-top: 4rem;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.todo-header {
-  display: grid;
-  grid-template-rows:1fr 1fr ;
+/* Add button */
+.btn-add {
+  border: none !important;
+  padding: 0 !important;
+  margin-right: 0.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: transparent;
+}
+.btn-add svg {
+  display: block;
+  margin: auto;
+}
+/* input to add list */
+.todo-form-outline {
   border: 1px solid black;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -25,13 +38,50 @@
 .todo-input:focus {
   outline: none;
 }
-.btn-add {
-  background-color: transparent;
-  border: none;
+/* styling for each list items */
+.todo-list-container {
+  margin: 1rem;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 1rem;
 }
+
+.todo-card{
+  margin: 0 1rem ;
+  font-size: large;
+}
+.card-Text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.card-Text > .card-text,
+.card-Text > .btn-delete {
+  margin: 0;
+  padding: 0;
+}
+
+.btn-delete {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.btn-delete:focus{
+  --bs-btn-close-focus-shadow: 0 0 0 0;
+}
+
+
+
+
+
 
 @media (min-width: 1900px) {
   .todo-input {
     width: 30rem;
   }
 }
+
+
