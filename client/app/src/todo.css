@@ -50,6 +50,7 @@
 .todo-card{
   margin: 0 1rem ;
   font-size: large;
+  z-index: 1;
 }
 .card-Text {
   display: flex;
@@ -68,13 +69,18 @@
   background-color: transparent !important;
   border: none !important;
   padding: 0 !important;
+  z-index: 2;
 }
 .btn-delete:focus{
   --bs-btn-close-focus-shadow: 0 0 0 0;
 }
-
-
-
+/* modal styling */
+.todo-form .todo-input {
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 2rem;
+  padding: 0.2rem 2rem;
+}
 
 
 

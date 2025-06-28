@@ -1,4 +1,4 @@
-import { Card, Button,Modal } from "react-bootstrap";
+import { Card, Button, Modal } from "react-bootstrap";
 import "../todo.css";
 import { useState } from "react";
 
@@ -8,7 +8,8 @@ export default function Todo() {
       <div className="todo-form-outline">
         <form>
           <input type="text" className="todo-input" placeholder="Add a task" />
-          <Button variant="add">
+          <Button variant="add" type="submit">
+            {" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -39,36 +40,52 @@ export default function Todo() {
   );
 }
 function List(props) {
-  const [ show,setShow ]=useState(false);
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (e) => {
+    setShow(true)
+    let value = e.target.innerText;
+    console.log(value);
+    return value;
+  };
   return (
     <>
-    <EditListModal show={show} handleClose={handleClose}/>
-    <Card className="todo-card" border="dark" onClick={handleShow}>
-      <Card.Body className="card-Text">
-        <Card.Text>
-          {props.index}. {props.description}
-        </Card.Text>
-      <Button variant="danger" className="btn-delete btn-close"></Button>
-      </Card.Body>
-    </Card>
+      <EditListModal show={show} handleClose={handleClose} value={handleShow}/>
+      <Card className="todo-card" border="dark">
+        <Card.Body className="card-Text" onClick={handleShow}>
+            <Card.Text  className="todo-text">
+              {props.index}. {props.description}
+            </Card.Text>
+          <Button variant="danger" className="btn-delete btn-close" onClick={e=>{
+            e.stopPropagation();
+            alert("Delete Task");
+          }}></Button>
+        </Card.Body>
+      </Card>
     </>
   );
 }
-function EditListModal(props){
-  return(
-    <Modal show={props.show} onHide={props.handleClose} centered className="todo-modal">
-    <Modal.Header closeButton>
-      <Modal.Title>Edit Task</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <form autoComplete="off">
-          <input type="text" />
-        <Button variant="primary" className="m-1">Save Task</Button>
-        <Button variant="dark" onClick={props.handleClose}>Cancel</Button>
-      </form>
-    </Modal.Body>
+function EditListModal(props) {
+  const [taskValue] = useState(props.handleShow);
+  return (
+    <Modal
+      show={props.show}
+      onHide={props.handleClose}
+      centered
+      className="todo-modal"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Edit Task</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form autoComplete="off" className="todo-form">
+          <input type="text" className="todo-input" value={taskValue}/><br />
+          <Button variant="primary" className="m-1">
+            Save Task
+          </Button>
+          <Button variant="dark">Delete Task</Button>
+        </form>
+      </Modal.Body>
     </Modal>
-  )
+  );
 }
