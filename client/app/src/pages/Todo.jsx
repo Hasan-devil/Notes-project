@@ -1,6 +1,6 @@
 import { Card, Button, Modal } from "react-bootstrap";
 import "../todo.css";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export default function Todo() {
   return (
@@ -41,24 +41,24 @@ export default function Todo() {
 }
 function List(props) {
   const [show, setShow] = useState(false);
+  const [taskValue, setTaskValue] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = (e) => {
     setShow(true)
-    let value = e.target.innerText;
-    console.log(value);
-    return value;
+    let value = e.target.innerText.replace(/^\d+\.\s/, "");
+    setTaskValue(value);
   };
   return (
     <>
-      <EditListModal show={show} handleClose={handleClose} value={handleShow}/>
+      <EditListModal show={show} handleClose={handleClose} taskvalue={taskValue}/>
       <Card className="todo-card" border="dark">
         <Card.Body className="card-Text" onClick={handleShow}>
             <Card.Text  className="todo-text">
-              {props.index}. {props.description}
+              <index>{props.index}</index>. {props.description}
             </Card.Text>
           <Button variant="danger" className="btn-delete btn-close" onClick={e=>{
             e.stopPropagation();
-            alert("Delete Task");
+            alert("Delete task");
           }}></Button>
         </Card.Body>
       </Card>
@@ -66,7 +66,13 @@ function List(props) {
   );
 }
 function EditListModal(props) {
-  const [taskValue] = useState(props.handleShow);
+  const [ taskValue,setTaskValue ] = useState(props.taskvalue);
+
+  useEffect(() => {
+    setTaskValue(props.taskvalue);
+  }, [props.taskvalue]);
+
+  console.log("task Value: ", taskValue);
   return (
     <Modal
       show={props.show}
@@ -75,15 +81,15 @@ function EditListModal(props) {
       className="todo-modal"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Edit Task</Modal.Title>
+        <Modal.Title>Edit task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form autoComplete="off" className="todo-form">
           <input type="text" className="todo-input" value={taskValue}/><br />
-          <Button variant="primary" className="m-1">
-            Save Task
+          <Button variant="light" className="m-1 btn-primarym" type="submit">
+            Save task
           </Button>
-          <Button variant="dark">Delete Task</Button>
+          <Button variant="dark">Delete task</Button>
         </form>
       </Modal.Body>
     </Modal>

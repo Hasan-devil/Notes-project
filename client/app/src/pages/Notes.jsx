@@ -6,7 +6,7 @@ export default function Notes() {
   //states
   const [showModal, setShow] = useState(false);
   const isEdit = useRef(false);
-
+  //state handling functions
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -17,6 +17,8 @@ export default function Notes() {
     isEdit.current = true;
     console.log("Edit Notes clicked");
   };
+
+//notes editor component
   function NotesEditor(props) {
     return (
       <>
@@ -50,6 +52,7 @@ export default function Notes() {
       </>
     );
   }
+  //main return
   return (
     <note>
       {isEdit.current ? (
@@ -98,6 +101,7 @@ export default function Notes() {
     </note>
   );
 }
+//each note card component
 function NoteCard(props) {
   return (
     <Card className="note-card" onClick={props.onClick} border="black">

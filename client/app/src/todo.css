@@ -68,7 +68,7 @@
 .btn-delete {
   background-color: transparent !important;
   border: none !important;
-  padding: 0 !important;
+  padding: 1 !important;
   z-index: 2;
 }
 .btn-delete:focus{
@@ -80,6 +80,11 @@
   border: 1px solid black;
   border-radius: 2rem;
   padding: 0.2rem 2rem;
+  margin-bottom: 2rem;
+}
+.btn-primarym{
+  background-color: transparent !important;
+  border: 1px solid black !important;
 }
 
 
