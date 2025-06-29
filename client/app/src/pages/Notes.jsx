@@ -1,67 +1,12 @@
 import { Card, Container, Row, Col, Modal } from "react-bootstrap";
 import "../notes.css";
-import { useState, useRef } from "react";
-
+import { useState, useEffect } from "react";
 export default function Notes() {
   //states
-  const [showModal, setShow] = useState(false);
-  const isEdit = useRef(false);
-  //state handling functions
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
-    setShow(true);
-    isEdit.current = false;
-  };
-  const handleShowEdit = () => {
-    setShow(true);
-    isEdit.current = true;
-    console.log("Edit Notes clicked");
-  };
-
-//notes editor component
-  function NotesEditor(props) {
-    return (
-      <>
-        <Modal show={showModal} onHide={handleClose} centered backdrop="static" className="notes-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>{props.title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form autoComplete="off">
-              <div className="mb-3 form-field">
-                <input
-                  type="text"
-                  className="form-control title-input"
-                  id="noteTitle"
-                  placeholder="Title"
-                  autoFocus
-                />
-                <textarea
-                  className="form-control content-input"
-                  id="noteContent"
-                  rows="5"
-                placeholder="Enter your note content here"
-                  required
-                ></textarea>
-              </div>
-              <button className="btn btn-primarym m-1">Save Note</button>
-              <button className="btn btn-dark">{props.btn}</button>
-            </form>
-          </Modal.Body>
-        </Modal>
-      </>
-    );
-  }
   //main return
   return (
     <note>
-      {isEdit.current ? (
-        <NotesEditor title="Edit Note" btn="Delete Notes"/>
-      ) : (
-        <NotesEditor title="Add New Note" btn="Cancel"/>
-      )}
-
-      <button className="btn-field" onClick={handleShow}>
+      <button className="btn-field">
         Enter Your Notes Here
         <span className="btn-ico">
           <svg
@@ -85,7 +30,6 @@ export default function Notes() {
               .map((_, i) => (
                 <Col key={i} xs={12} md={6} lg={4}>
                   <NoteCard
-                    onClick={handleShowEdit}
                     title="Note Title"
                     text="This is a sample note content. You can edit or delete this note. Lorem
           ipsum dolor sit amet consectetur adipisicing elit. Sed natus,
@@ -101,14 +45,85 @@ export default function Notes() {
     </note>
   );
 }
+// notes editor
+function NotesEditor(props) {
+  // states
+  const [noteTitle, setNoteTitle] = useState(props.noteTitle);
+  const [noteText, setNoteText] = useState(props.noteText);
+  // functions
+  useEffect(() => {
+    setNoteTitle(props.noteTitle);
+    setNoteText(props.noteText);
+  },[props.noteTitle, props.noteText]);
+  return (
+    <>
+      <Modal
+        show={props.showModal}
+        onHide={props.handleClose}
+        centered
+        backdrop="static"
+        className="notes-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Notes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form autoComplete="off">
+            <div className="mb-3 form-field">
+              <input
+                type="text"
+                className="form-control title-input"
+                id="noteTitle"
+                placeholder="Title"
+                value={noteTitle}
+                onChange={props.handleTitleChange}
+                autoFocus
+              />
+              <textarea
+                className="form-control content-input"
+                id="noteContent"
+                rows="5"
+                value={noteText}
+                onChange={props.handleTextChange}
+                required
+              ></textarea>
+            </div>
+            <button className="btn btn-primarym m-1">Save Note</button>
+            <button className="btn btn-dark">Delete Notes</button>
+          </form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+}
 //each note card component
 function NoteCard(props) {
+  //states
+  const [noteTitle, setNoteTitle] = useState(props.title || "Title");
+  const [noteText, setNoteText] = useState(props.text);
+  const [showModal, setShow] = useState(false);
+  // functions
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleTitleChange = (e) => setNoteTitle(e.target.value);
+  const handleTextChange = (e) => setNoteText(e.target.value);
+  
   return (
-    <Card className="note-card" onClick={props.onClick} border="black">
-      <Card.Body>
-        <Card.Title>{props.title || "Title"}</Card.Title>
-        <Card.Text>{props.text}</Card.Text>
-      </Card.Body>
-    </Card>
+    <>
+      <NotesEditor
+        handleClose={handleClose}
+        showModal={showModal}
+        noteTitle={noteTitle}
+        handleTitleChange={handleTitleChange}
+        noteText={noteText}
+        handleTextChange={handleTextChange}
+      />
+      <Card className="note-card" border="black" onClick={handleShow}>
+        <Card.Body>
+          <Card.Title>{props.title || "Title"}</Card.Title>
+          <Card.Text>{props.text}</Card.Text>
+        </Card.Body>
+      </Card>
+    </>
   );
 }

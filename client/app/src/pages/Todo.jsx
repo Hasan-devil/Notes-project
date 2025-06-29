@@ -41,16 +41,15 @@ export default function Todo() {
 }
 function List(props) {
   const [show, setShow] = useState(false);
-  const [taskValue, setTaskValue] = useState("");
+  const [taskValue, setTaskValue] = useState(props.description);
   const handleClose = () => setShow(false);
-  const handleShow = (e) => {
-    setShow(true)
-    let value = e.target.innerText.replace(/^\d+\.\s/, "");
-    setTaskValue(value);
+  const handleShow = () => {
+    setShow(true);
   };
+  const handleChange = (e) => setTaskValue(e.target.value);
   return (
     <>
-      <EditListModal show={show} handleClose={handleClose} taskvalue={taskValue}/>
+      <EditListModal show={show} handleClose={handleClose} taskvalue={taskValue} onChangeHandler={handleChange} />
       <Card className="todo-card" border="dark">
         <Card.Body className="card-Text" onClick={handleShow}>
             <Card.Text  className="todo-text">
@@ -72,7 +71,6 @@ function EditListModal(props) {
     setTaskValue(props.taskvalue);
   }, [props.taskvalue]);
 
-  console.log("task Value: ", taskValue);
   return (
     <Modal
       show={props.show}
@@ -85,7 +83,7 @@ function EditListModal(props) {
       </Modal.Header>
       <Modal.Body>
         <form autoComplete="off" className="todo-form">
-          <input type="text" className="todo-input" value={taskValue}/><br />
+          <input type="text" className="todo-input" value={taskValue} onChange={props.onChangeHandler}/><br />
           <Button variant="light" className="m-1 btn-primarym" type="submit">
             Save task
           </Button>
