@@ -3,10 +3,36 @@ import "../notes.css";
 import { useState, useEffect } from "react";
 export default function Notes() {
   //states
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteText, setNoteText] = useState("");
+  const [showModal, setShow] = useState(false);
+  const [data] = useState([
+    {
+      title: "Sample Note",
+      text: "This is a sample note content. You can edit or delete this note. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus, consectetur distinctio exercitationem non quod eaque nobis voluptatum architecto optio nihil voluptate minima veritatis rem, atque quia, provident quos excepturi.",
+    },
+    {
+      title: "Another Note",
+      text: "This is another sample note content. You can edit or delete this note. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus, consectetur distinctio exercitationem non quod eaque nobis voluptatum architecto optio nihil voluptate minima veritatis rem, atque quia, provident quos excepturi.",
+    },
+  ]);
+  // functions
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleTitleChange = (e) => setNoteTitle(e.target.value);
+  const handleTextChange = (e) => setNoteText(e.target.value);
   //main return
   return (
     <note>
-      <button className="btn-field">
+        <NotesEditor
+        handleClose={handleClose}
+        showModal={showModal}
+        noteTitle={noteTitle}
+        handleTitleChange={handleTitleChange}
+        noteText={noteText}
+        handleTextChange={handleTextChange}
+      />
+      <button className="btn-field" onClick={handleShow}>
         Enter Your Notes Here
         <span className="btn-ico">
           <svg
@@ -25,17 +51,12 @@ export default function Notes() {
       <notesholder>
         <Container>
           <Row>
-            {Array(20)
-              .fill()
+            {data
               .map((_, i) => (
                 <Col key={i} xs={12} md={6} lg={4}>
                   <NoteCard
-                    title="Note Title"
-                    text="This is a sample note content. You can edit or delete this note. Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sed natus,
-          consectetur distinctio exercitationem non quod eaque nobis voluptatum
-          architecto optio nihil voluptate minima veritatis rem, atque quia,
-          provident quos excepturi."
+                    title={_.title}
+                    text={_.text}
                   />
                 </Col>
               ))}
@@ -96,6 +117,7 @@ function NotesEditor(props) {
     </>
   );
 }
+
 //each note card component
 function NoteCard(props) {
   //states
@@ -118,7 +140,7 @@ function NoteCard(props) {
         noteText={noteText}
         handleTextChange={handleTextChange}
       />
-      <Card className="note-card" border="black" onClick={handleShow}>
+      <Card className="note-card shadow-sm" onClick={handleShow}>
         <Card.Body>
           <Card.Title>{props.title || "Title"}</Card.Title>
           <Card.Text>{props.text}</Card.Text>

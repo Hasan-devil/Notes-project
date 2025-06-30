@@ -28,13 +28,13 @@ function NavBarElement() {
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav className="w-100 justify-content-between mx-6">
-              <Nav.Link className="nav-links" as={NavLink} to={"/"}>
+              <Nav.Link className="nav-links shadow" as={NavLink} to={"/"}>
                 Notes
               </Nav.Link>
-              <Nav.Link className="nav-links" as={NavLink} to={"/todo"}>
+              <Nav.Link className="nav-links shadow" as={NavLink} to={"/todo"}>
                 To-Do
               </Nav.Link>
-              <Nav.Link className="nav-links" as={NavLink} to={"/script"}>
+              <Nav.Link className="nav-links shadow" as={NavLink} to={"/script"}>
                 Script
               </Nav.Link>
             </Nav>

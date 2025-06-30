@@ -2,10 +2,14 @@
 .todo-container {
   margin-top: 4rem;
   width: 100%;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
 }
 /* Add button */
 .btn-add {
@@ -22,10 +26,17 @@
 }
 /* input to add list */
 .todo-form-outline {
-  border: 1px solid black;
+  background-color: var(--accent);
+  border: 1px solid var(--border-color);
   margin-top: 1rem;
   margin-bottom: 1rem;
   border-radius: 2rem;
+  cursor: default;
+  transition: all 0.35s;
+}
+.todo-form-outline:hover {
+  background-color: var(--active-accent);
+  box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.553);
 }
 .todo-input {
   font-size: 1.1rem;
@@ -38,6 +49,8 @@
 .todo-input:focus {
   outline: none;
 }
+
+
 /* styling for each list items */
 .todo-list-container {
   margin: 1rem;
@@ -48,9 +61,16 @@
 }
 
 .todo-card{
+  border:1px solid var(--border-color-light) !important;
+  background-color: var(--bg-color-secondary) !important;
   margin: 0 1rem ;
   font-size: large;
-  z-index: 1;
+  transition: all 0.1s;
+}
+.todo-card:hover {
+  transform: scale(1.002);
+  border: none !important;
+  box-shadow: 0 0 10px var(--active-accent) !important;
 }
 .card-Text {
   display: flex;
@@ -68,8 +88,7 @@
 .btn-delete {
   background-color: transparent !important;
   border: none !important;
-  padding: 1 !important;
-  z-index: 2;
+  padding: .5rem !important;
 }
 .btn-delete:focus{
   --bs-btn-close-focus-shadow: 0 0 0 0;
@@ -77,14 +96,14 @@
 /* modal styling */
 .todo-form .todo-input {
   background-color: transparent;
-  border: 1px solid black;
+  border: 1px solid var(--border-color);
   border-radius: 2rem;
   padding: 0.2rem 2rem;
   margin-bottom: 2rem;
 }
 .btn-primarym{
   background-color: transparent !important;
-  border: 1px solid black !important;
+  border: 1px solid var(--border-color) !important;
 }
 
 

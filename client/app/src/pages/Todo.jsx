@@ -1,8 +1,9 @@
 import { Card, Button, Modal } from "react-bootstrap";
 import "../todo.css";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Todo() {
+  const [data] = useState(["Sample Task", "Another Task"]);
   return (
     <div className="todo-container">
       <div className="todo-form-outline">
@@ -26,15 +27,13 @@ export default function Todo() {
       </div>
       {/* List of tasks */}
       <div className="todo-list-container">
-        {Array(10)
-          .fill()
-          .map((_, index) => (
-            <List
-              key={index}
-              description={`Description for task ${index + 1}`}
-              index={index + 1}
-            />
-          ))}
+        {data.map((_, index) => (
+          <List
+            key={index}
+            description={_}
+            index={index + 1}
+          />
+        ))}
       </div>
     </div>
   );
@@ -49,23 +48,32 @@ function List(props) {
   const handleChange = (e) => setTaskValue(e.target.value);
   return (
     <>
-      <EditListModal show={show} handleClose={handleClose} taskvalue={taskValue} onChangeHandler={handleChange} />
-      <Card className="todo-card" border="dark">
+      <EditListModal
+        show={show}
+        handleClose={handleClose}
+        taskvalue={taskValue}
+        onChangeHandler={handleChange}
+      />
+      <Card className="todo-card">
         <Card.Body className="card-Text" onClick={handleShow}>
-            <Card.Text  className="todo-text">
-              <index>{props.index}</index>. {props.description}
-            </Card.Text>
-          <Button variant="danger" className="btn-delete btn-close" onClick={e=>{
-            e.stopPropagation();
-            alert("Delete task");
-          }}></Button>
+          <Card.Text className="todo-text">
+            <index>{props.index}</index>. {props.description}
+          </Card.Text>
+          <Button
+            variant="danger"
+            className="btn-delete btn-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              alert("Delete task");
+            }}
+          ></Button>
         </Card.Body>
       </Card>
     </>
   );
 }
 function EditListModal(props) {
-  const [ taskValue,setTaskValue ] = useState(props.taskvalue);
+  const [taskValue, setTaskValue] = useState(props.taskvalue);
 
   useEffect(() => {
     setTaskValue(props.taskvalue);
@@ -83,7 +91,13 @@ function EditListModal(props) {
       </Modal.Header>
       <Modal.Body>
         <form autoComplete="off" className="todo-form">
-          <input type="text" className="todo-input" value={taskValue} onChange={props.onChangeHandler}/><br />
+          <input
+            type="text"
+            className="todo-input"
+            value={taskValue}
+            onChange={props.onChangeHandler}
+          />
+          <br />
           <Button variant="light" className="m-1 btn-primarym" type="submit">
             Save task
           </Button>
