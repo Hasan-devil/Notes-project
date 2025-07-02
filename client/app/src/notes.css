@@ -47,13 +47,14 @@ notesholder {
   margin-top: 1rem;
   overflow: auto;
   cursor: default;
-  transition: all 0.1s;
+  will-change: transform, box-shadow; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .note-card:hover {
   transform: scale(1.02);
   border: none !important;
   box-shadow: 0 0 10px var(--active-accent) !important;
-}
+} 
 
 /* Modal */
 .form-field {

@@ -65,7 +65,7 @@
   background-color: var(--bg-color-secondary) !important;
   margin: 0 1rem ;
   font-size: large;
-  transition: all 0.1s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .todo-card:hover {
   transform: scale(1.002);

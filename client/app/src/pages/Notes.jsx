@@ -24,7 +24,7 @@ export default function Notes() {
   //main return
   return (
     <note>
-        <NotesEditor
+      <NotesEditor
         handleClose={handleClose}
         showModal={showModal}
         noteTitle={noteTitle}
@@ -51,15 +51,11 @@ export default function Notes() {
       <notesholder>
         <Container>
           <Row>
-            {data
-              .map((_, i) => (
-                <Col key={i} xs={12} md={6} lg={4}>
-                  <NoteCard
-                    title={_.title}
-                    text={_.text}
-                  />
-                </Col>
-              ))}
+            {data.map((_, i) => (
+              <Col key={i} xs={12} md={6} lg={4}>
+                <NoteCard title={_.title} text={_.text} />
+              </Col>
+            ))}
           </Row>
         </Container>
       </notesholder>
@@ -75,7 +71,7 @@ function NotesEditor(props) {
   useEffect(() => {
     setNoteTitle(props.noteTitle);
     setNoteText(props.noteText);
-  },[props.noteTitle, props.noteText]);
+  }, [props.noteTitle, props.noteText]);
   return (
     <>
       <Modal
@@ -129,7 +125,7 @@ function NoteCard(props) {
   const handleShow = () => setShow(true);
   const handleTitleChange = (e) => setNoteTitle(e.target.value);
   const handleTextChange = (e) => setNoteText(e.target.value);
-  
+
   return (
     <>
       <NotesEditor

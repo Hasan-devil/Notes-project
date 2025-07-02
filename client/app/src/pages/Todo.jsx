@@ -1,14 +1,38 @@
 import { Card, Button, Modal } from "react-bootstrap";
 import "../todo.css";
-import { useState, useEffect } from "react";
+import { useState,useEffect } from "react";
 
 export default function Todo() {
-  const [data] = useState(["Sample Task", "Another Task"]);
+  const [data, setData] = useState(["Sample Task", "Another Task"]);
+  const [inputValue,setInputValue] = useState("")
+  function addTask(e) {
+    e.preventDefault();
+    setData([...data, inputValue.trim()]);
+    setInputValue("")
+  }
+  function editTask(index,task) {
+    const newData = [...data]
+    newData[index] = task
+    setData(newData)
+  }
+  function removeTask(index){
+    const newData=[...data]
+    newData.splice(index,1)
+    setData(newData)
+  }
+  //main return
   return (
     <div className="todo-container">
       <div className="todo-form-outline">
-        <form>
-          <input type="text" className="todo-input" placeholder="Add a task" />
+        <form autoComplete="off" onSubmit={addTask}>
+          <input
+            type="text"
+            className="todo-input"
+            placeholder="Add a task"
+            value={inputValue}
+            onChange={e=>setInputValue(e.target.value)}
+            required
+          />
           <Button variant="add" type="submit">
             {" "}
             <svg
@@ -32,6 +56,9 @@ export default function Todo() {
             key={index}
             description={_}
             index={index + 1}
+            number={index}
+            handleEdit={editTask}
+            handleRemove={removeTask}
           />
         ))}
       </div>
@@ -41,30 +68,50 @@ export default function Todo() {
 function List(props) {
   const [show, setShow] = useState(false);
   const [taskValue, setTaskValue] = useState(props.description);
+  
+  useEffect(() => {
+    setTaskValue(props.description)
+  }, [props.description])
+  
+
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
   };
+
+  const editTask = (e) =>{
+    e.preventDefault();
+    props.handleEdit(props.number,taskValue)
+    setShow(false)
+  }
+  const removeTask = () =>{
+    props.handleRemove(props.number)
+    setShow(false)
+  }
+
   const handleChange = (e) => setTaskValue(e.target.value);
   return (
     <>
       <EditListModal
         show={show}
         handleClose={handleClose}
-        taskvalue={taskValue}
+        taskValue={taskValue}
+        setTaskValue={setTaskValue}
         onChangeHandler={handleChange}
+        handleEdit={editTask}
+        handleRemove={removeTask}
       />
       <Card className="todo-card">
         <Card.Body className="card-Text" onClick={handleShow}>
           <Card.Text className="todo-text">
-            <index>{props.index}</index>. {props.description}
+            {props.index}. {props.description}
           </Card.Text>
           <Button
             variant="danger"
             className="btn-delete btn-close"
             onClick={(e) => {
               e.stopPropagation();
-              alert("Delete task");
+              removeTask()
             }}
           ></Button>
         </Card.Body>
@@ -73,12 +120,6 @@ function List(props) {
   );
 }
 function EditListModal(props) {
-  const [taskValue, setTaskValue] = useState(props.taskvalue);
-
-  useEffect(() => {
-    setTaskValue(props.taskvalue);
-  }, [props.taskvalue]);
-
   return (
     <Modal
       show={props.show}
@@ -90,18 +131,22 @@ function EditListModal(props) {
         <Modal.Title>Edit task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form autoComplete="off" className="todo-form">
+        <form
+          autoComplete="off"
+          className="todo-form"
+          onSubmit={props.handleEdit}
+        >
           <input
             type="text"
             className="todo-input"
-            value={taskValue}
+            value={props.taskValue}
             onChange={props.onChangeHandler}
           />
           <br />
           <Button variant="light" className="m-1 btn-primarym" type="submit">
             Save task
           </Button>
-          <Button variant="dark">Delete task</Button>
+          <Button variant="dark" onClick={props.handleRemove}>Delete task</Button>
         </form>
       </Modal.Body>
     </Modal>
