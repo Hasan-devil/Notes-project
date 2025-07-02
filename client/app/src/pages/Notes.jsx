@@ -1,12 +1,13 @@
 import { Card, Container, Row, Col, Modal } from "react-bootstrap";
 import "../notes.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 export default function Notes() {
   //states
   const [noteTitle, setNoteTitle] = useState("");
   const [noteText, setNoteText] = useState("");
+  const isAdd = useRef(false);
   const [showModal, setShow] = useState(false);
-  const [data] = useState([
+  const [data, setData] = useState([
     {
       title: "Sample Note",
       text: "This is a sample note content. You can edit or delete this note. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus, consectetur distinctio exercitationem non quod eaque nobis voluptatum architecto optio nihil voluptate minima veritatis rem, atque quia, provident quos excepturi.",
@@ -21,16 +22,34 @@ export default function Notes() {
   const handleShow = () => setShow(true);
   const handleTitleChange = (e) => setNoteTitle(e.target.value);
   const handleTextChange = (e) => setNoteText(e.target.value);
+  function editNote(index, title, text) {
+    const newData = [...data];
+    newData[index] = { title, text };
+    setData(newData);
+  }
+  function addNote(title, text) {
+    const newData = [...data];
+    newData.push({ title, text });
+    setData(newData);
+  }
+  function deleteNotes(index) {
+    const newData = [...data];
+    newData.splice(index,1);
+    setData(newData);
+  }
   //main return
   return (
     <note>
+      {/* for adding notes */}
       <NotesEditor
-        handleClose={handleClose}
+        isAdd={(isAdd.current = true)}
         showModal={showModal}
         noteTitle={noteTitle}
-        handleTitleChange={handleTitleChange}
         noteText={noteText}
+        handleClose={handleClose}
+        handleTitleChange={handleTitleChange}
         handleTextChange={handleTextChange}
+        handleAdd={addNote}
       />
       <button className="btn-field" onClick={handleShow}>
         Enter Your Notes Here
@@ -53,7 +72,15 @@ export default function Notes() {
           <Row>
             {data.map((_, i) => (
               <Col key={i} xs={12} md={6} lg={4}>
-                <NoteCard title={_.title} text={_.text} />
+                <NoteCard
+                  key={i}
+                  index={i}
+                  title={_.title}
+                  text={_.text}
+                  handleEdit={editNote}
+                  handleDelete={deleteNotes}
+                  isAdd={(isAdd.current = false)}
+                />
               </Col>
             ))}
           </Row>
@@ -72,6 +99,14 @@ function NotesEditor(props) {
     setNoteTitle(props.noteTitle);
     setNoteText(props.noteText);
   }, [props.noteTitle, props.noteText]);
+  const addNote = (e) => {
+    e.preventDefault();
+    props.handleAdd(noteTitle, noteText);
+    setNoteText("");
+    setNoteTitle("");
+    props.handleClose();
+  };
+
   return (
     <>
       <Modal
@@ -82,10 +117,13 @@ function NotesEditor(props) {
         className="notes-modal"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Edit Notes</Modal.Title>
+          <Modal.Title>{props.isAdd ? "Add Notes" : "Edit Notes"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form autoComplete="off">
+          <form
+            autoComplete="off"
+            onSubmit={props.isAdd ? addNote : props.handleEdit}
+          >
             <div className="mb-3 form-field">
               <input
                 type="text"
@@ -105,8 +143,15 @@ function NotesEditor(props) {
                 required
               ></textarea>
             </div>
-            <button className="btn btn-primarym m-1">Save Note</button>
-            <button className="btn btn-dark">Delete Notes</button>
+            <button className="btn btn-primarym m-1" type="submit">
+              Save Note
+            </button>
+            <button
+              className="btn btn-dark"
+              onClick={props.isAdd ? props.handleClose : props.handleDelete}
+            >
+              {props.isAdd ? "Cancel" : "Delete"}
+            </button>
           </form>
         </Modal.Body>
       </Modal>
@@ -125,7 +170,21 @@ function NoteCard(props) {
   const handleShow = () => setShow(true);
   const handleTitleChange = (e) => setNoteTitle(e.target.value);
   const handleTextChange = (e) => setNoteText(e.target.value);
-
+  const editNote = (e) => {
+    e.preventDefault();
+    props.handleEdit(props.index, noteTitle, noteText);
+    handleClose();
+  };
+  const deleteNote = (e) => {
+    e.preventDefault();
+    props.handleDelete(props.index);
+    handleClose();
+  };
+  useEffect(() => {
+    setNoteTitle(props.title || "Title");
+    setNoteText(props.text);
+  }, [props.title, props.text]);
+  
   return (
     <>
       <NotesEditor
@@ -135,6 +194,10 @@ function NoteCard(props) {
         handleTitleChange={handleTitleChange}
         noteText={noteText}
         handleTextChange={handleTextChange}
+        handleEdit={editNote}
+        handleDelete={deleteNote}
+        index={props.index}
+        isAdd={props.isAdd}
       />
       <Card className="note-card shadow-sm" onClick={handleShow}>
         <Card.Body>

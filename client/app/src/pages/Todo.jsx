@@ -1,4 +1,4 @@
-import { Card, Button, Modal } from "react-bootstrap";
+import { Card, Button, Modal, Toast } from "react-bootstrap";
 import "../todo.css";
 import { useState,useEffect } from "react";
 
@@ -12,8 +12,13 @@ export default function Todo() {
   }
   function editTask(index,task) {
     const newData = [...data]
-    newData[index] = task
-    setData(newData)
+    newData[index] = task.trim()
+    if (newData[index] === "") {
+      return;
+    }
+    else{
+      setData(newData)
+    }
   }
   function removeTask(index){
     const newData=[...data]
@@ -82,11 +87,11 @@ function List(props) {
   const editTask = (e) =>{
     e.preventDefault();
     props.handleEdit(props.number,taskValue)
-    setShow(false)
+    handleClose();
   }
   const removeTask = () =>{
     props.handleRemove(props.number)
-    setShow(false)
+    handleClose();
   }
 
   const handleChange = (e) => setTaskValue(e.target.value);

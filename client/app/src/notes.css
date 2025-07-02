@@ -41,7 +41,6 @@ notesholder {
 .note-card {
   width: 15rem !important;
   height: 15rem !important;
-  align-items: center;
   background-color: var(--bg-color-secondary) !important;
   border: 1px solid var(--border-color-light) !important;
   margin-top: 1rem;
