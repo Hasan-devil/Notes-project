@@ -6,6 +6,7 @@
   --text-color-secondary: hsl(0, 0%, 10%);
   --border-color: hsl(0, 0%, 30%);
   --border-color-light: hsl(0, 0%, 80%);
+  --accent2:hsl(240, 100%, 80%);
   --accent1: hsl(237, 51%, 91%);
   --accent: hsl(240, 36%, 90%);
   --active-accent: hsl(240, 36%, 80%);

@@ -143,7 +143,7 @@ function NotesEditor(props) {
                 required
               ></textarea>
             </div>
-            <button className="btn btn-primarym m-1" type="submit">
+            <button className="btn btn-save m-1" type="submit">
               Save Note
             </button>
             <button

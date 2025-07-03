@@ -148,7 +148,7 @@ function EditListModal(props) {
             onChange={props.onChangeHandler}
           />
           <br />
-          <Button variant="light" className="m-1 btn-primarym" type="submit">
+          <Button variant="light" className="m-1 btn-save" type="submit">
             Save task
           </Button>
           <Button variant="dark" onClick={props.handleRemove}>Delete task</Button>

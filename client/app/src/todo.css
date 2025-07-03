@@ -101,10 +101,18 @@
   padding: 0.2rem 2rem;
   margin-bottom: 2rem;
 }
-.btn-primarym{
-  background-color: transparent !important;
-  border: 1px solid var(--border-color) !important;
+.btn-save{
+  border: .1rem solid var(--accent2) !important;
+  background: transparent !important;
+  color: var(--accent2) !important;
+  transition: all .15s ease-in-out !important;
 }
+.btn-save:hover{
+  color: var(--bg-color-secondary) !important;
+  background: hsla(240, 100%, 80%, 0.474) !important;
+}
+
+
 
 
 
