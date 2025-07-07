@@ -1,29 +1,44 @@
 import { Card, Button, Modal, Toast } from "react-bootstrap";
 import "../todo.css";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Todo() {
-  const [data, setData] = useState(["Sample Task", "Another Task"]);
-  const [inputValue,setInputValue] = useState("")
+  const [data, setData] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  useEffect(() => {
+   fetch("http://127.0.0.1:5000/todos")
+  .then(res => {
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  })
+  .then(data => setData(data))
+
+  .catch(err => console.error("Fetch error:", err));
+
+  },[]);
+
   function addTask(e) {
     e.preventDefault();
-    setData([...data, inputValue.trim()]);
-    setInputValue("")
+    let newData = [...data]
+    let value = inputValue.trim()
+    newData.push({value})
+    setData(newData);
+    setInputValue("");
   }
-  function editTask(index,task) {
-    const newData = [...data]
-    newData[index] = task.trim()
+
+  function editTask(index, task) {
+    const newData = [...data];
+    newData[index] = task.trim();
     if (newData[index] === "") {
       return;
-    }
-    else{
-      setData(newData)
+    } else {
+      setData(newData);
     }
   }
-  function removeTask(index){
-    const newData=[...data]
-    newData.splice(index,1)
-    setData(newData)
+  function removeTask(index) {
+    const newData = [...data];
+    newData.splice(index, 1);
+    setData(newData);
   }
   //main return
   return (
@@ -35,7 +50,7 @@ export default function Todo() {
             className="todo-input"
             placeholder="Add a task"
             value={inputValue}
-            onChange={e=>setInputValue(e.target.value)}
+            onChange={(e) => setInputValue(e.target.value)}
             required
           />
           <Button variant="add" type="submit">
@@ -59,7 +74,7 @@ export default function Todo() {
         {data.map((_, index) => (
           <List
             key={index}
-            description={_}
+            description={_.value}
             index={index + 1}
             number={index}
             handleEdit={editTask}
@@ -73,26 +88,25 @@ export default function Todo() {
 function List(props) {
   const [show, setShow] = useState(false);
   const [taskValue, setTaskValue] = useState(props.description);
-  
+
   useEffect(() => {
-    setTaskValue(props.description)
-  }, [props.description])
-  
+    setTaskValue(props.description);
+  }, [props.description]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
   };
 
-  const editTask = (e) =>{
+  const editTask = (e) => {
     e.preventDefault();
-    props.handleEdit(props.number,taskValue)
+    props.handleEdit(props.number, taskValue);
     handleClose();
-  }
-  const removeTask = () =>{
-    props.handleRemove(props.number)
+  };
+  const removeTask = () => {
+    props.handleRemove(props.number);
     handleClose();
-  }
+  };
 
   const handleChange = (e) => setTaskValue(e.target.value);
   return (
@@ -116,7 +130,7 @@ function List(props) {
             className="btn-delete btn-close"
             onClick={(e) => {
               e.stopPropagation();
-              removeTask()
+              removeTask();
             }}
           ></Button>
         </Card.Body>
@@ -144,14 +158,16 @@ function EditListModal(props) {
           <input
             type="text"
             className="todo-input"
-            value={props.taskValue}
+            value={props.taskValue || ''}
             onChange={props.onChangeHandler}
           />
           <br />
           <Button variant="light" className="m-1 btn-save" type="submit">
             Save task
           </Button>
-          <Button variant="dark" onClick={props.handleRemove}>Delete task</Button>
+          <Button variant="dark" onClick={props.handleRemove}>
+            Delete task
+          </Button>
         </form>
       </Modal.Body>
     </Modal>
