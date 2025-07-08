@@ -6,39 +6,52 @@ export default function Todo() {
   const [data, setData] = useState([]);
   const [inputValue, setInputValue] = useState("");
   useEffect(() => {
-   fetch("http://127.0.0.1:5000/todos")
-  .then(res => {
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    return res.json();
-  })
-  .then(data => setData(data))
+    fetch("http://127.0.0.1:5000/todos")
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => setData(data))
 
-  .catch(err => console.error("Fetch error:", err));
-
-  },[]);
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
 
   function addTask(e) {
     e.preventDefault();
-    let newData = [...data]
-    let value = inputValue.trim()
-    newData.push({value})
-    setData(newData);
-    setInputValue("");
+    let value = inputValue.trim();
+    fetch("http://127.0.0.1:5000/todos", {
+      method: "POST",
+      body: value,
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        setData((newData) => [...newData, json]);
+        setInputValue("");
+      });
   }
 
-  function editTask(index, task) {
-    const newData = [...data];
-    newData[index] = task.trim();
-    if (newData[index] === "") {
-      return;
-    } else {
-      setData(newData);
-    }
+  function editTask(id,task){
+     fetch(`http://127.0.0.1:5000/todos/${id}`, {
+       method: "PUT" ,
+       body:task
+      }).then(res => res.json())
+        .then((updatedTask) => {
+          setData((prev) => prev.map((task)=>
+            task.id===id ? {...task,value:updatedTask.value} : task
+          ))
+        })
   }
-  function removeTask(index) {
-    const newData = [...data];
-    newData.splice(index, 1);
-    setData(newData);
+
+  function removeTask(id) {
+    fetch(`http://127.0.0.1:5000/todos/${id}`, { method: "DELETE" }).then(
+      (res) => {
+        if (res.ok) {
+          setData((prev) => prev.filter((item) => item.id !== id));
+        }
+      });
   }
   //main return
   return (
@@ -48,6 +61,7 @@ export default function Todo() {
           <input
             type="text"
             className="todo-input"
+            name="value"
             placeholder="Add a task"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -73,10 +87,10 @@ export default function Todo() {
       <div className="todo-list-container">
         {data.map((_, index) => (
           <List
-            key={index}
+            key={_.id}
             description={_.value}
             index={index + 1}
-            number={index}
+            id={_.id}
             handleEdit={editTask}
             handleRemove={removeTask}
           />
@@ -100,11 +114,11 @@ function List(props) {
 
   const editTask = (e) => {
     e.preventDefault();
-    props.handleEdit(props.number, taskValue);
+    props.handleEdit(props.id, taskValue);
     handleClose();
   };
   const removeTask = () => {
-    props.handleRemove(props.number);
+    props.handleRemove(props.id);
     handleClose();
   };
 
@@ -158,7 +172,7 @@ function EditListModal(props) {
           <input
             type="text"
             className="todo-input"
-            value={props.taskValue || ''}
+            value={props.taskValue || ""}
             onChange={props.onChangeHandler}
           />
           <br />
