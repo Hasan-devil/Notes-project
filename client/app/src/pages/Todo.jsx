@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 export default function Todo() {
   const [data, setData] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  //fetching todo data
   useEffect(() => {
     fetch("http://127.0.0.1:5000/todos")
       .then((res) => {

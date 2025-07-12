@@ -7,35 +7,77 @@ export default function Notes() {
   const [noteText, setNoteText] = useState("");
   const isAdd = useRef(false);
   const [showModal, setShow] = useState(false);
-  const [data, setData] = useState([
-    {
-      title: "Sample Note",
-      text: "This is a sample note content. You can edit or delete this note. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus, consectetur distinctio exercitationem non quod eaque nobis voluptatum architecto optio nihil voluptate minima veritatis rem, atque quia, provident quos excepturi.",
-    },
-    {
-      title: "Another Note",
-      text: "This is another sample note content. You can edit or delete this note. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed natus, consectetur distinctio exercitationem non quod eaque nobis voluptatum architecto optio nihil voluptate minima veritatis rem, atque quia, provident quos excepturi.",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/notes")
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
+      .then((json) => setData(json))
+
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
+
   // functions
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setNoteText("");
+    setNoteTitle("");
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
   const handleTitleChange = (e) => setNoteTitle(e.target.value);
   const handleTextChange = (e) => setNoteText(e.target.value);
-  function editNote(index, title, text) {
-    const newData = [...data];
-    newData[index] = { title, text };
-    setData(newData);
+
+  // function edi_Note(id, title, text) {
+  //   const newData = [...data];
+  //   newData[id] = { title, text };
+  //   setData(newData);Title
+  // }
+  function editNote(id, Title, text) {
+    fetch(`http://127.0.0.1:5000/notes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title: Title, description: text }),
+    })
+      .then((res) => res.json())
+      .then((updatednote) => {
+        setData((prev) =>
+          prev.map((note) =>
+            note.id === updatednote.id
+              ? {
+                  ...note,
+                  title: updatednote.title,
+                  description: updatednote.description,
+                }
+              : note
+          )
+        );
+      });
   }
+
   function addNote(title, text) {
-    const newData = [...data];
-    newData.push({ title, text });
-    setData(newData);
+    fetch("http://127.0.0.1:5000/notes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title: title, description: text }),
+    })
+      .then((res) => res.json())
+      .then((json) => setData((prev) => [...prev, json]));
   }
-  function deleteNotes(index) {
-    const newData = [...data];
-    newData.splice(index,1);
-    setData(newData);
+  function deleteNotes(id) {
+    fetch(`http://127.0.0.1:5000/notes/${id}`, {
+      method: "DELETE",
+    }).then((res) => {
+      if (res.ok) {
+        setData((prev) => prev.filter((item) => item.id !== id));
+      }
+    });
   }
   //main return
   return (
@@ -75,8 +117,9 @@ export default function Notes() {
                 <NoteCard
                   key={i}
                   index={i}
+                  id={_.id}
                   title={_.title}
-                  text={_.text}
+                  text={_.description}
                   handleEdit={editNote}
                   handleDelete={deleteNotes}
                   isAdd={(isAdd.current = false)}
@@ -102,9 +145,9 @@ function NotesEditor(props) {
   const addNote = (e) => {
     e.preventDefault();
     props.handleAdd(noteTitle, noteText);
-    setNoteText("");
-    setNoteTitle("");
     props.handleClose();
+    setNoteTitle("");
+    setNoteText("");
   };
 
   return (
@@ -172,19 +215,19 @@ function NoteCard(props) {
   const handleTextChange = (e) => setNoteText(e.target.value);
   const editNote = (e) => {
     e.preventDefault();
-    props.handleEdit(props.index, noteTitle, noteText);
+    props.handleEdit(props.id, noteTitle, noteText);
     handleClose();
   };
   const deleteNote = (e) => {
     e.preventDefault();
-    props.handleDelete(props.index);
+    props.handleDelete(props.id);
     handleClose();
   };
   useEffect(() => {
     setNoteTitle(props.title || "Title");
     setNoteText(props.text);
   }, [props.title, props.text]);
-  
+
   return (
     <>
       <NotesEditor
