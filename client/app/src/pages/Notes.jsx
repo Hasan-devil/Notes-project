@@ -1,7 +1,7 @@
 import { Card, Container, Row, Col, Modal } from "react-bootstrap";
 import "../notes.css";
 import { useState, useEffect, useRef } from "react";
-export default function Notes() {
+export default function Notes(props) {
   //states
   const [noteTitle, setNoteTitle] = useState("");
   const [noteText, setNoteText] = useState("");
@@ -84,6 +84,7 @@ export default function Notes() {
     <note>
       {/* for adding notes */}
       <NotesEditor
+        theme={props.theme}
         isAdd={(isAdd.current = true)}
         showModal={showModal}
         noteTitle={noteTitle}
@@ -123,6 +124,7 @@ export default function Notes() {
                   handleEdit={editNote}
                   handleDelete={deleteNotes}
                   isAdd={(isAdd.current = false)}
+                  theme={props.theme}
                 />
               </Col>
             ))}
@@ -159,10 +161,10 @@ function NotesEditor(props) {
         backdrop="static"
         className="notes-modal"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className={props.theme=="body-dark"?"bg-dark text-white":"bg-light"}>
           <Modal.Title>{props.isAdd ? "Add Notes" : "Edit Notes"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className={props.theme=="body-dark"?"bg-dark":"bg-light"}>
           <form
             autoComplete="off"
             onSubmit={props.isAdd ? addNote : props.handleEdit}
@@ -241,6 +243,7 @@ function NoteCard(props) {
         handleDelete={deleteNote}
         index={props.index}
         isAdd={props.isAdd}
+        theme={props.theme}
       />
       <Card className="note-card shadow-sm" onClick={handleShow}>
         <Card.Body>

@@ -2,7 +2,7 @@ import { Card, Button, Modal, Toast } from "react-bootstrap";
 import "../todo.css";
 import { useState, useEffect } from "react";
 
-export default function Todo() {
+export default function Todo(props) {
   const [data, setData] = useState([]);
   const [inputValue, setInputValue] = useState("");
   //fetching todo data
@@ -34,16 +34,19 @@ export default function Todo() {
       });
   }
 
-  function editTask(id,task){
-     fetch(`http://127.0.0.1:5000/todos/${id}`, {
-       method: "PUT" ,
-       body:task
-      }).then(res => res.json())
-        .then((updatedTask) => {
-          setData((prev) => prev.map((task)=>
-            task.id===id ? {...task,value:updatedTask.value} : task
-          ))
-        })
+  function editTask(id, task) {
+    fetch(`http://127.0.0.1:5000/todos/${id}`, {
+      method: "PUT",
+      body: task,
+    })
+      .then((res) => res.json())
+      .then((updatedTask) => {
+        setData((prev) =>
+          prev.map((task) =>
+            task.id === id ? { ...task, value: updatedTask.value } : task
+          )
+        );
+      });
   }
 
   function removeTask(id) {
@@ -52,7 +55,8 @@ export default function Todo() {
         if (res.ok) {
           setData((prev) => prev.filter((item) => item.id !== id));
         }
-      });
+      }
+    );
   }
   //main return
   return (
@@ -92,6 +96,7 @@ export default function Todo() {
             description={_.value}
             index={index + 1}
             id={_.id}
+            theme={props.theme}
             handleEdit={editTask}
             handleRemove={removeTask}
           />
@@ -127,6 +132,7 @@ function List(props) {
   return (
     <>
       <EditListModal
+        theme={props.theme}
         show={show}
         handleClose={handleClose}
         taskValue={taskValue}
@@ -161,10 +167,10 @@ function EditListModal(props) {
       centered
       className="todo-modal"
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className={props.theme=="body-dark"?"bg-dark text-white":"bg-light"}>
         <Modal.Title>Edit task</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className={props.theme=="body-dark"?"bg-dark text-white":"bg-light"}>
         <form
           autoComplete="off"
           className="todo-form"
