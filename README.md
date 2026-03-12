@@ -22,14 +22,6 @@ A clean and responsive web application designed to help users organize their tho
 
 ---
 
-### 📸 Screenshots
-
-| Desktop View | Mobile View |
-| :--- | :--- |
-| ![Desktop Placeholder](https://via.placeholder.com/400x250?text=Desktop+Screenshot) | ![Mobile Placeholder](https://via.placeholder.com/200x400?text=Mobile+Screenshot) |
-
----
-
 ### 🚀 Getting Started
 
 To get a local copy up and running, follow these simple steps:
